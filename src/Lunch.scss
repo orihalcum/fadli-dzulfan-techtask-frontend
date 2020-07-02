@@ -1,0 +1,332 @@
+// FONT
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
+
+
+* {
+  box-sizing: border-box;
+}
+
+
+// VARIABLES
+
+$default-margin-padding: 20px;
+$max-width: 480px;
+$text-color: #777;
+$primary-color: #6cba4e;
+
+// MIXINS
+
+@mixin default-padding {
+  padding: $default-margin-padding;
+}
+
+@mixin radius-content {
+  border-top-left-radius: $default-margin-padding;
+  border-top-right-radius: $default-margin-padding;
+}
+
+// TYPOGRAPHY
+
+h1, h2, h3, h4, h5, h6 { font-weight: 700; }
+
+.App {
+
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+
+  &-container {
+    width: 100%;
+    min-height: 100%;
+    max-width: $max-width;
+    background-color: #FFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: scroll;
+    position: relative;
+  }
+
+  &-header {
+    @include default-padding;
+    background-color: $primary-color;
+    height: 220px;
+    color: #FFF;
+  }
+
+  &-menu {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    .anticon {
+      svg {
+        height: 26px;
+        width: 26px;
+      }
+    }
+    &-date {
+      margin-top: 2px;
+    }
+  }
+
+  &-content {
+    @include radius-content;
+    background-color: #FFF;
+    color: $text-color;
+    min-height: calc(100vh - 220px);
+    margin-top: -$default-margin-padding;
+    overflow: hidden;
+    @include default-padding;
+
+    &-date {
+      margin-bottom: $default-margin-padding;
+    }
+
+    &-recipes {
+      width: 100%;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      &-title { margin-top: 0; }
+      &-list {
+        width: auto;
+        overflow-x: scroll;
+        display: flex;
+      }
+    }
+
+    &-ingredients {
+      &-title {
+        display: flex;
+        justify-content: space-between;
+        small {
+          text-transform: lowercase;
+          color: red;
+        }  
+      }
+    }
+
+  }
+
+  &-recipe {
+    height: 180px;
+    width: 200px;
+    background-size: cover;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  &-ingredient {
+    padding: 15px 0;
+    position: relative;
+    small {
+      color: #CCC;
+      font-size: 10px;
+      margin-left: 10px;
+    }
+    input[type="checkbox"] {
+      position: absolute;
+      right: 10px;
+      top: 15px;
+    }
+    &:first-child {
+      padding-top: 0;
+      input[type="checkbox"] {
+        top: 5px;
+      }
+    }
+    &:not(:last-child) {
+      border-bottom: 1px solid #EFEFEF;
+    }
+  }
+
+  &-modal {
+    
+    z-index: 1;
+    position: fixed;
+    min-height: 10px;
+    left: 50%;
+    transform: translate(-50%);
+    
+    &-floating {
+      @include radius-content;
+      width: 85%;
+      bottom: 30px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      background-color: $primary-color;
+      display: none;
+      &.show {
+        display: block;
+      }
+
+    }
+
+    &-overlay {
+      display: none;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.2);
+      height: 100vh;
+      bottom: 0;
+      z-index: 10;
+
+      // .overlay {
+      //   background-color: rgba(0, 0, 0, 0.2);
+      //   height: 100vh;
+      //   width: 100vw;
+      //   z-index: 2;
+      // }
+
+      &.show {
+        display: block;
+      }
+
+      .App-modal-content {
+        @include radius-content;
+        background-color: #FFF;
+        width: 100%;
+        min-height: 10px;
+        z-index: 3;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: $default-margin-padding;
+        text-align: center;
+      }
+
+    }
+
+    .recomendation-recipe {
+
+      &-title {
+        @include default-padding;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #FFF;
+      }
+
+      &-list {
+        position: fixed;
+        bottom: calc(30px + 50px);
+        background-color: #fff;
+        border-radius: $default-margin-padding;
+        @include default-padding;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      &-item{
+        border-bottom: 1px solid #EFEFEF;
+        padding: 15px 0;
+        display: flex;
+        &:first-child {
+          padding-top: 0;
+        }
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+        &-info {
+          width: 70%;
+        }
+        &-image {
+          height: 60px;
+          width: 60px;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          background-size: cover;
+          margin-right: 15px;
+        }
+        &-name {
+          margin: 0 0 5px;
+          color: $primary-color;
+        }
+        &-ingredients{
+          color: $text-color;
+          font-size: 12px;
+          line-height: 180%;
+          margin: 0;
+        }
+      }
+    }
+
+    .recipe {
+      padding-bottom: 15px;
+      text-align: left;
+      &-image {
+        height: 200px;
+        width: 100%;
+        background-size: cover;
+        background-position: center;
+        border-radius: 15px;
+      }
+      &-name {
+        h3 {
+          color: $primary-color;
+        }
+      }
+      &-ingredients {
+        color: $text-color;
+      }
+    }
+
+    &-close {
+      margin-top: -25px;
+      margin-bottom: 10px;
+      color: $text-color;
+      .anticon {
+        svg {
+          height: 30px !important;
+          width: 30px !important;
+        }
+      }
+    }
+
+  }
+}
+
+.mt-30 { margin-top: 30px; }
+
+.color-primary { color: $primary-color }
+
+@media (max-width: 414px) {
+  .App {
+    font-size: 0.9em;
+    &-recipe {
+      height: 130px;
+    }
+    &-modal {
+      &-content {
+        .recipe {
+          &-image {
+            height: 200px;
+          }
+        }
+      }
+      &-close {
+        margin-top: -25px;
+        margin-bottom: 10px;
+        color: $text-color;
+        .anticon {
+          svg {
+            height: 25px !important;
+            width: 28px !important;
+          }
+        }
+      }
+    }
+  }
+  .anticon {
+    svg {
+      height: 22px !important;
+      width: 22px !important;
+    }
+  }
+}
