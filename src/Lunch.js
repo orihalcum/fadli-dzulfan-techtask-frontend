@@ -86,6 +86,9 @@ const Lunch = () => {
     const handleChangeDate = (e) => {
       setPickDate(e)
       setShowModalDatePicker(false)
+      console.log(filterIngredients(ingredients, e))
+      console.log(filterIngredients(ingredients, e).length)
+      if(filterIngredients(ingredients, e).length === 0) clearPick()
     }
 
     const closeModal = () => {

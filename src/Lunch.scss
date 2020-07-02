@@ -226,11 +226,11 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.2);
+      z-index: 12;
 
       &-content {
         height: 375px;
         width: 300px;
-        z-index: 3;
         position: fixed;
         top: 20%;
         left: 50%;
