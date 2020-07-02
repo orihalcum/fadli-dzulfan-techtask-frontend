@@ -56,6 +56,7 @@ const Lunch = () => {
       AppApi.getIngredients()
         .then(({ status, data }) => {
           if(status === 200)
+            data = filterIngredients(data, pickDate)
             setIngredients(data.map(item => { item.checked = false; return item }))
         }).catch(err => {
           console.log(err)
@@ -116,7 +117,8 @@ const Lunch = () => {
       ingredients, 
       handlePickIngredient,
       showModalRecomendationRecipe,
-      clearPick
+      clearPick,
+      pickDate
     }
 
     const modalDetailRecipeProps = {
@@ -241,12 +243,17 @@ const AppAside = ({ showAside, setShowAside }) => (
   }
 
   const AppIngredients = (props) => {
-    let { ingredients, showModalRecomendationRecipe, clearPick } = props
+    let { ingredients, showModalRecomendationRecipe, clearPick, pickDate } = props
+    let data = filterIngredients(ingredients, pickDate)
     return (
       <div className="App-content-ingredients mt-30">
         <h3 className="App-content-ingredients-title">Available Ingredients { showModalRecomendationRecipe && <small onClick={ clearPick }>Clear</small> }</h3>
         <div className="App-content-ingredients-list">
-          { ingredients.map((item, key) => <IngredientList { ...item } { ...props } key={ key } index={ key } />) }
+          { 
+            data.length > 0
+            ? data.map((item, key) => <IngredientList { ...item } { ...props } key={ key } index={ key } />)
+            : <small className="color-light-grey">No available ingredients</small>
+          }
         </div>
       </div>
     )
@@ -329,7 +336,10 @@ const AppAside = ({ showAside, setShowAside }) => (
             onChange={ handleChangeDate }
             inline
           />
-          <a href="/" onClick={ e => { e.preventDefault(); setShowModalDatePicker(false) } }>Cancel</a>
+          <div className="App-modal-datepicker-content-buttons">
+            <a href="/" onClick={ e => { e.preventDefault(); handleChangeDate(new Date()) } }>Today</a>
+            <a href="/" onClick={ e => { e.preventDefault(); setShowModalDatePicker(false) } }>Cancel</a>
+          </div>
         </div>
       </div>
     )
@@ -339,5 +349,9 @@ const AppAside = ({ showAside, setShowAside }) => (
 // Helpers
 
   const destructIngredients = ingredients => ingredients.toString().split(',').join(', ')
+
+  const isBeforeDate = (dateA, dateB) => dateA <= dateB;
+
+  const filterIngredients = (data, pickDate) => data.filter(item => isBeforeDate(new Date(pickDate), new Date(item['use-by'])) === true)
 
 // End of Helpers

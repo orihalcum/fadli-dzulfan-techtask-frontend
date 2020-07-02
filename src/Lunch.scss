@@ -14,6 +14,7 @@
 $default-margin-padding: 20px;
 $max-width: 480px;
 $text-color: #777;
+$shadow-color: #CCC;
 $primary-color: #6cba4e;
 
 // MIXINS
@@ -135,7 +136,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     padding: 15px 0;
     position: relative;
     small {
-      color: #CCC;
+      color: $shadow-color;
       font-size: 10px;
       margin-left: 10px;
     }
@@ -227,7 +228,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       background-color: rgba(0, 0, 0, 0.2);
 
       &-content {
-        height: 350px;
+        height: 375px;
         width: 300px;
         z-index: 3;
         position: fixed;
@@ -241,10 +242,16 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
         justify-content: center;
         flex-direction: column;
         border-radius: 15px;
-        a {
-          margin-top: 10px;
-          color: $text-color;
-          text-decoration: none;
+        &-buttons {
+          margin-top: 20px;
+          a {
+            color: $text-color;
+            text-decoration: none;
+            &:not(:last-child) {
+              color: $primary-color;
+              margin-right: 30px;
+            }
+          }
         }
       }
 
@@ -397,6 +404,8 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
 .mt-30 { margin-top: 30px; }
 
 .color-primary { color: $primary-color }
+.color-grey { color: $text-color }
+.color-light-grey { color: $shadow-color }
 
 .datepicker {
   display: none;
