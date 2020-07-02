@@ -1,9 +1,12 @@
-// eslint-disable-next-line
 import React, { useState, useEffect } from 'react';
 import './Lunch.scss'
-import { AlignLeftOutlined, CalendarOutlined, LineOutlined, UpOutlined, DownOutlined } from '@ant-design/icons'
+import { AlignLeftOutlined, CalendarOutlined, LineOutlined, UpOutlined, DownOutlined, GithubOutlined, ArrowLeftOutlined, LinkedinOutlined, GlobalOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import { AppApi } from './api';
+
+import DatePicker from "react-datepicker";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 
 const _recipes = [ "https://www.pumpkinnspice.com/wp-content/uploads/2016/08/grilled-ham-cheese-sandwich-26-1024x683.jpg", "https://www.onceuponachef.com/images/2019/07/Big-Italian-Salad-1200x1553.jpg", "https://assets-a1.kompasiana.com/items/album/2017/07/11/hotdogg-5964764d83c1e62953732352.jpg" ]
 
@@ -15,13 +18,18 @@ const Lunch = () => {
   
   // Define Vars
 
+    const [pickDate, setPickDate] = useState(new Date())
     const [recipes, setRecipes] = useState([])
     const [ingredients, setIngredients] = useState([])
     const [recomendation, setRecomendation] = useState([])
     const [modalData, setModalData] = useState('')
     const [showModalDetailRecipe, setShowModalDetailRecipe] = useState(false)
     const [showModalRecomendationRecipe, setShowModalRecomendationRecipe] = useState(false)
+    const [showDetailRecomendationRecipe, setShowDetailRecomendationRecipe] = useState(false)
+    const [showModalDatePicker, setShowModalDatePicker] = useState(false)
+    const [showAside, setShowAside] = useState(false)
 
+    
   // End of Define Vars
 
 
@@ -74,6 +82,11 @@ const Lunch = () => {
       setShowModalRecomendationRecipe(ingredients.filter(item => item.checked).length > 0)
     }
 
+    const handleChangeDate = (e) => {
+      setPickDate(e)
+      setShowModalDatePicker(false)
+    }
+
     const closeModal = () => {
       setModalData('')
       setShowModalDetailRecipe(false)
@@ -82,17 +95,50 @@ const Lunch = () => {
     const clearPick = () => {
       setIngredients(ingredients.map(item => { item.checked = false; return item }))
       setShowModalRecomendationRecipe('')
+      setShowDetailRecomendationRecipe(false)
     }
   // End of Handler
 
 
   // Props
 
-    const modalProps = {
+    const appAsideProps = {
+      setShowAside,
+      showAside
+    }
+
+    const appRecipeProps = {
+      recipes, 
+      viewDetailRecipe: handleClickRecipe
+    }
+  
+    const appIngredientsProps = {
+      ingredients, 
+      handlePickIngredient,
+      showModalRecomendationRecipe,
+      clearPick
+    }
+
+    const modalDetailRecipeProps = {
       modalData,
       showModalDetailRecipe,
       closeModal
     }
+
+    const modalRecomentaionProps = {
+      recomendation,
+      showModalRecomendationRecipe,
+      viewDetailRecipe: handleClickRecipe,
+      showDetailRecomendationRecipe, 
+      setShowDetailRecomendationRecipe
+    }
+
+    const modalDatePick = {
+      showModalDatePicker, 
+      setShowModalDatePicker,
+      pickDate,
+      handleChangeDate
+    } 
 
   // End of Props
 
@@ -104,21 +150,23 @@ const Lunch = () => {
 
   return (
     <div className="App">
+      <AppAside { ...appAsideProps } />
       <div className="App-container">
         <div className="App-header">
           <div className="App-menu">
-            <AlignLeftOutlined />
-            <div className="App-menu-date">{ moment().format('dddd, LL') }</div>
-            <CalendarOutlined />
+            <AlignLeftOutlined onClick={ () => setShowAside(!showAside) } />
+            <div className="App-menu-date">{ moment(pickDate).format('dddd, LL') }</div>
+            <CalendarOutlined onClick={ () => setShowModalDatePicker(true) } />
           </div>
-          <h1>Hello, what would you like to eat today?</h1>
+          <h1 onClick={ () => setShowAside(false) }>Hello, what would you like to eat today?</h1>
         </div>
-        <div className="App-content" style={{ paddingBottom: showModalRecomendationRecipe ? 110 : 30 }}>
-          <AppRecipe recipes={ recipes } viewDetailRecipe={ handleClickRecipe } />          
-          <AppIngredients ingredients={ ingredients } handlePickIngredient={ handlePickIngredient } showModalRecomendationRecipe={ showModalRecomendationRecipe } clearPick={ clearPick } />
+        <div className="App-content" onClick={ () => setShowAside(false) } style={{ paddingBottom: showModalRecomendationRecipe ? 110 : 30 }}>
+          <AppRecipe { ...appRecipeProps } />          
+          <AppIngredients { ...appIngredientsProps } />
         </div>
-        <AppModalDetailRecipe { ...modalProps } />
-        <AppModalRecomendationRecipe recomendation={ recomendation } showModalRecomendationRecipe={ showModalRecomendationRecipe } viewDetailRecipe={ handleClickRecipe } />
+        <AppModalDetailRecipe { ...modalDetailRecipeProps } />
+        <AppModalRecomendationRecipe { ...modalRecomentaionProps } />
+        <AppModalDatePicker { ...modalDatePick } />
       </div>
     </div>
   );
@@ -134,6 +182,28 @@ export default Lunch;
 // 
 // Components ------------------------------------------------------------------------------------------------------------------------------------------------------------
 //
+
+
+// Aside
+
+const AppAside = ({ showAside, setShowAside }) => (
+  <div className={`App-aside ${ showAside ? 'show' : '' }`}>
+    <div className="App-aside-title">
+      <ArrowLeftOutlined onClick={ () => setShowAside(false) } />
+    </div>
+    <div className="App-aside-body">
+      <div>
+        <h3>Dzulfan Fadli</h3>
+      </div>
+      <a href="https://github.com/orihalcum/fadli-dzulfan-techtask-frontend" rel="noopener noreferrer" target="_blank" aria-label="github"><GithubOutlined /></a>
+      <a href="https://www.linkedin.com/in/dzulfan-fadli/" rel="noopener noreferrer" target="_blank" aria-label="linkedin"><LinkedinOutlined /></a>
+      <a href="https://dzulfanfadli.com/" rel="noopener noreferrer" target="_blank" aria-label="linkedin"><GlobalOutlined /></a>
+    </div>
+  </div>
+)
+
+// End of Aside
+
 
 // Recipe
 
@@ -221,18 +291,15 @@ export default Lunch;
     )
   }
 
-  const AppModalRecomendationRecipe = ({ recomendation, showModalRecomendationRecipe, viewDetailRecipe }) => {
-
-    const [showDetail, setShowDetail] = useState(false)
-
+  const AppModalRecomendationRecipe = ({ recomendation, showDetailRecomendationRecipe, setShowDetailRecomendationRecipe, showModalRecomendationRecipe, viewDetailRecipe }) => {
     return (
       <AppModal showModal={ showModalRecomendationRecipe }>
         <div className="recomendation-recipe">
-          <div className="recomendation-recipe-title" onClick={ e => setShowDetail(!showDetail) }>
-            Recomendation Recipes ({ recomendation.length }) <span>{ showDetail ? <UpOutlined /> : <DownOutlined /> }</span>
+          <div className="recomendation-recipe-title" onClick={ e => setShowDetailRecomendationRecipe(!showDetailRecomendationRecipe) }>
+            Recomendation Recipes ({ recomendation.length }) <span>{ showDetailRecomendationRecipe ? <UpOutlined /> : <DownOutlined /> }</span>
           </div>
           {
-            showDetail &&
+            showDetailRecomendationRecipe &&
             <div className="recomendation-recipe-list">
               {
                 recomendation.map((item, key) => (
@@ -252,10 +319,25 @@ export default Lunch;
     )
   }
 
+  const AppModalDatePicker = ({ showModalDatePicker, setShowModalDatePicker, pickDate, handleChangeDate }) => {
+    return (
+      <div className={ `App-modal-datepicker ${ showModalDatePicker ? 'show' : ''}` }>
+        <div className="App-modal-datepicker-content">
+          <DatePicker
+            className="datepicker"
+            selected={ pickDate }
+            onChange={ handleChangeDate }
+            inline
+          />
+          <a href="/" onClick={ e => { e.preventDefault(); setShowModalDatePicker(false) } }>Cancel</a>
+        </div>
+      </div>
+    )
+  }
 // End of Modals
 
 // Helpers
 
-const destructIngredients = ingredients => ingredients.toString().split(',').join(', ')
+  const destructIngredients = ingredients => ingredients.toString().split(',').join(', ')
 
 // End of Helpers

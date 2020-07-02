@@ -1,11 +1,13 @@
 // FONT
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
 
-
 * {
   box-sizing: border-box;
 }
 
+:focus {
+  outline: none;
+}
 
 // VARIABLES
 
@@ -29,6 +31,7 @@ $primary-color: #6cba4e;
 
 h1, h2, h3, h4, h5, h6 { font-weight: 700; }
 
+// MAIN APP
 .App {
 
   display: flex;
@@ -40,6 +43,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
   font-family: 'Quicksand', sans-serif;
   font-weight: 600;
 
+  // APP CONTAINER 
   &-container {
     width: 100%;
     min-height: 100%;
@@ -50,6 +54,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     position: relative;
   }
 
+  // APP HEADER 
   &-header {
     @include default-padding;
     background-color: $primary-color;
@@ -57,6 +62,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     color: #FFF;
   }
 
+  // APP MENU
   &-menu {
     margin-bottom: 40px;
     display: flex;
@@ -68,11 +74,13 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
         width: 26px;
       }
     }
+    // APP MENU DATE
     &-date {
       margin-top: 2px;
     }
   }
 
+  // APP CONTENT
   &-content {
     @include radius-content;
     background-color: #FFF;
@@ -82,10 +90,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     overflow: hidden;
     @include default-padding;
 
-    &-date {
-      margin-bottom: $default-margin-padding;
-    }
-
+    // APP CONTENT RECIPES
     &-recipes {
       width: 100%;
       &::-webkit-scrollbar {
@@ -99,6 +104,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       }
     }
 
+    // APP CONTENT INGREDIENTS
     &-ingredients {
       &-title {
         display: flex;
@@ -112,6 +118,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
 
   }
 
+  // APP RECIPE
   &-recipe {
     height: 180px;
     width: 200px;
@@ -123,6 +130,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     }
   }
 
+  // APP INGREDIENTS
   &-ingredient {
     padding: 15px 0;
     position: relative;
@@ -135,6 +143,9 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       position: absolute;
       right: 10px;
       top: 15px;
+      height: 18px;
+      width: 18px;
+      background-color: transparent;
     }
     &:first-child {
       padding-top: 0;
@@ -147,6 +158,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     }
   }
 
+  // APP MODAL
   &-modal {
     
     z-index: 1;
@@ -155,9 +167,12 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     left: 50%;
     transform: translate(-50%);
     
+    // APP MODAL FLOATING
     &-floating {
+
       @include radius-content;
       width: 85%;
+      max-width: calc(480px - 60px);
       bottom: 30px;
       border-radius: 50px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -169,6 +184,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
 
     }
 
+    // APP MODAL OVERLAY
     &-overlay {
       display: none;
       width: 100%;
@@ -177,21 +193,16 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       bottom: 0;
       z-index: 10;
 
-      // .overlay {
-      //   background-color: rgba(0, 0, 0, 0.2);
-      //   height: 100vh;
-      //   width: 100vw;
-      //   z-index: 2;
-      // }
-
       &.show {
         display: block;
       }
 
+      // APP MODAL CONTENT ON OVERLAY 
       .App-modal-content {
         @include radius-content;
         background-color: #FFF;
         width: 100%;
+        max-width: $max-width;
         min-height: 10px;
         z-index: 3;
         position: absolute;
@@ -203,6 +214,47 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
 
     }
 
+    &-datepicker {
+      
+      display: none;
+      height: 100vh;
+      width: 100%;
+      max-width: $max-width;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.2);
+
+      &-content {
+        height: 350px;
+        width: 300px;
+        z-index: 3;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%);
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 15px;
+        a {
+          margin-top: 10px;
+          color: $text-color;
+          text-decoration: none;
+        }
+      }
+
+      &.show {
+        display: block;
+      }
+
+    }
+
+    // APP MODAL RECOMENDATION RECIPE
     .recomendation-recipe {
 
       &-title {
@@ -257,6 +309,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       }
     }
 
+    // APP MODAL RECIPE
     .recipe {
       padding-bottom: 15px;
       text-align: left;
@@ -277,6 +330,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       }
     }
 
+    // APP MODAL CLOSE
     &-close {
       margin-top: -25px;
       margin-bottom: 10px;
@@ -290,26 +344,123 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
     }
 
   }
+
+  // APP ASIDE
+  &-aside {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -220px;
+    width: 220px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 11;
+    transition: left 0.5s;
+    padding: $default-margin-padding;
+    color: $text-color;
+    &-title {
+      text-align: right;
+      .anticon {
+        svg{
+          height: 20px !important;
+          width: 20px !important;
+        }
+      }
+    }
+    &-body {
+      margin-top: 60px;
+      text-align: center;
+      h3 { color: $text-color; }
+      a {
+        text-decoration: none;
+        color: $primary-color;
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+        .anticon {
+          margin-right: 5px;
+          svg{
+            height: 22px !important;
+            width: 22px !important;
+          }
+        }
+      }
+    }
+    &.show {
+      left: 0;
+    }
+  }
 }
+
+// GENERALS 
 
 .mt-30 { margin-top: 30px; }
 
 .color-primary { color: $primary-color }
 
+.datepicker {
+  display: none;
+}
+
+// REACT DATE PICKER
+
+.react-datepicker {
+  border: none !important;
+  font-family: 'Quicksand', sans-serif !important;
+  &__header {
+    background-color: rgba(108,186,78, 1) !important;
+    border-bottom: none !important;
+    div {
+      color: white !important;
+    }
+  }
+  &__day--selected {
+    background-color: $primary-color !important;
+  }
+  &__navigation {
+    &--previous {
+      border-right-color: white !important;
+      &:hover {
+        border-right-color: white !important;
+      }
+    }
+    &--next {
+      border-left-color: white !important;
+      &:hover {
+        border-left-color: white !important;
+      }
+    }
+  }
+}
+
+// RESPONSIVE
+
 @media (max-width: 414px) {
+
+  // MAIN APP
   .App {
+
     font-size: 0.9em;
+
+    // APP RECIPE
     &-recipe {
       height: 130px;
     }
+
+    // APP MODAL
     &-modal {
+      // APP MODAL CONTENT
       &-content {
         .recipe {
           &-image {
             height: 200px;
           }
         }
+        bottom: 0;
+        left: 0;
       }
+
+      // APP MODAL CLOSE
       &-close {
         margin-top: -25px;
         margin-bottom: 10px;
@@ -323,10 +474,35 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; }
       }
     }
   }
+
+  // GENERALS ANT ICON
   .anticon {
     svg {
       height: 22px !important;
       width: 22px !important;
     }
   }
+
+}
+
+@media (min-width: 415px) {
+  // MAIN APP
+  .App {
+
+    // APP MODAL
+    &-modal {
+
+      // APP MODAL OVERLAY
+      &-overlay {
+
+        // APP MODAL CONTENT
+        .App-modal-content {
+          left: 50% !important;
+          transform: translate(-50%);
+        }
+
+      }
+    }
+  }
+
 }
