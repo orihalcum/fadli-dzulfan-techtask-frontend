@@ -28,7 +28,7 @@ const Lunch = () => {
     const [showDetailRecomendationRecipe, setShowDetailRecomendationRecipe] = useState(false)
     const [showModalDatePicker, setShowModalDatePicker] = useState(false)
     const [showAside, setShowAside] = useState(false)
-
+    const [toastMessage, setToastMessage] = useState('')
     
   // End of Define Vars
 
@@ -49,6 +49,7 @@ const Lunch = () => {
           }
         }).catch(err => {
           console.log(err)
+          showErrorMessage('Something went wrong while get recipes!', 5)
         })
     }
 
@@ -60,6 +61,7 @@ const Lunch = () => {
             setIngredients(data.map(item => { item.checked = false; return item }))
         }).catch(err => {
           console.log(err)
+          showErrorMessage('Something went wrong while get ingredients!', 5)
         })
     }
   
@@ -86,8 +88,6 @@ const Lunch = () => {
     const handleChangeDate = (e) => {
       setPickDate(e)
       setShowModalDatePicker(false)
-      console.log(filterIngredients(ingredients, e))
-      console.log(filterIngredients(ingredients, e).length)
       if(filterIngredients(ingredients, e).length === 0) clearPick()
     }
 
@@ -101,6 +101,14 @@ const Lunch = () => {
       setShowModalRecomendationRecipe('')
       setShowDetailRecomendationRecipe(false)
     }
+
+    const showErrorMessage = (message, duration) => {
+      setToastMessage(message)
+      setTimeout(() => {
+        setToastMessage('')
+      }, duration * 1000)
+    }
+
   // End of Handler
 
 
@@ -172,6 +180,7 @@ const Lunch = () => {
         <AppModalDetailRecipe { ...modalDetailRecipeProps } />
         <AppModalRecomendationRecipe { ...modalRecomentaionProps } />
         <AppModalDatePicker { ...modalDatePick } />
+        <AppToastMessage message={ toastMessage } />
       </div>
     </div>
   );
@@ -347,6 +356,11 @@ const AppAside = ({ showAside, setShowAside }) => (
       </div>
     )
   }
+
+  const AppToastMessage = ({ message }) => {
+    return <div className={ `App-toast ${ message !== '' ? 'show' : '' }` }> { message } </div>
+  }
+
 // End of Modals
 
 // Helpers
