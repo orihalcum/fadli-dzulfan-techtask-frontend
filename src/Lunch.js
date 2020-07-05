@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import './Lunch.scss'
 import { AlignLeftOutlined, CalendarOutlined, LineOutlined, UpOutlined, DownOutlined, GithubOutlined, ArrowLeftOutlined, LinkedinOutlined, GlobalOutlined } from '@ant-design/icons'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import './Lunch.scss'
 import moment from 'moment'
 import { AppApi } from './api';
+// import { AppToastMessage } from './components/app-toast-message'
 
-import DatePicker from "react-datepicker";
- 
-import "react-datepicker/dist/react-datepicker.css";
+import { AppRecipe } from './components/AppRecipe';
 
 const _recipes = [ "https://www.pumpkinnspice.com/wp-content/uploads/2016/08/grilled-ham-cheese-sandwich-26-1024x683.jpg", "https://www.onceuponachef.com/images/2019/07/Big-Italian-Salad-1200x1553.jpg", "https://assets-a1.kompasiana.com/items/album/2017/07/11/hotdogg-5964764d83c1e62953732352.jpg" ]
 
@@ -164,16 +165,16 @@ const Lunch = () => {
   return (
     <div className="App">
       <AppAside { ...appAsideProps } />
-      <div className="App-container">
-        <div className="App-header">
-          <div className="App-menu">
-            <AlignLeftOutlined onClick={ () => setShowAside(!showAside) } />
-            <div className="App-menu-date">{ moment(pickDate).format('dddd, LL') }</div>
-            <CalendarOutlined onClick={ () => setShowModalDatePicker(true) } />
+      <div data-testid="App-container" className="App-container">
+        <div data-testid="App-header" className="App-header">
+          <div data-testid="App-menu" className="App-menu">
+            <AlignLeftOutlined data-testid="App-menu-toggle-aside" onClick={ () => setShowAside(!showAside) } />
+            <div data-testid="App-menu-date" className="App-menu-date">{ moment(pickDate).format('dddd, LL') }</div>
+            <CalendarOutlined data-testid="App-menu-calendar" onClick={ () => setShowModalDatePicker(true) } />
           </div>
-          <h1 onClick={ () => setShowAside(false) }>Hello, what would you like to eat today?</h1>
+          <h1 data-testid="App-header-greetings" onClick={ () => setShowAside(false) }>Hello, what would you like to eat today?</h1>
         </div>
-        <div className="App-content" onClick={ () => setShowAside(false) } style={{ paddingBottom: showModalRecomendationRecipe ? 110 : 30 }}>
+        <div data-testid="App-content" className="App-content" onClick={ () => setShowAside(false) } style={{ paddingBottom: showModalRecomendationRecipe ? 110 : 30 }}>
           <AppRecipe { ...appRecipeProps } />          
           <AppIngredients { ...appIngredientsProps } />
         </div>
@@ -221,20 +222,20 @@ const AppAside = ({ showAside, setShowAside }) => (
 
 // Recipe
 
-  const RecipeList = ({ title, image, ingredients, viewDetailRecipe }) => {
-    return <div className="App-recipe" style={{ backgroundImage: `url(${image})` }} onClick={ () => viewDetailRecipe({ title, image, ingredients }) } />
-  }
+  // const RecipeList = ({ title, image, ingredients, viewDetailRecipe }) => {
+  //   return <div className="App-recipe" style={{ backgroundImage: `url(${image})` }} onClick={ () => viewDetailRecipe({ title, image, ingredients }) } />
+  // }
 
-  const AppRecipe = ({ recipes, viewDetailRecipe }) => {
-    return (
-      <div className="App-content-recipes">
-        <h3 className="App-content-recipes-title">Recomended Recipes</h3>
-        <div className="App-content-recipes-list">
-          { recipes.map((item, key) => <RecipeList { ...item } key={ key } viewDetailRecipe={ viewDetailRecipe } />) }
-        </div>
-      </div>
-    )
-  }
+  // const AppRecipe = ({ recipes, viewDetailRecipe }) => {
+  //   return (
+  //     <div data-testid="App-content-recipes" className="App-content-recipes">
+  //       <h3 className="App-content-recipes-title">Recomended Recipes</h3>
+  //       <div className="App-content-recipes-list">
+  //         { recipes.map((item, key) => <RecipeList { ...item } key={ key } viewDetailRecipe={ viewDetailRecipe } />) }
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
 // End of Recipe 
 
@@ -258,7 +259,7 @@ const AppAside = ({ showAside, setShowAside }) => (
     let { ingredients, showModalRecomendationRecipe, clearPick, pickDate } = props
     let data = filterIngredients(ingredients, pickDate)
     return (
-      <div className="App-content-ingredients mt-30">
+      <div data-testid="App-content-ingredients" className="App-content-ingredients mt-30">
         <h3 className="App-content-ingredients-title">Available Ingredients { showModalRecomendationRecipe && <small onClick={ clearPick }>Clear</small> }</h3>
         <div className="App-content-ingredients-list">
           { 
@@ -360,7 +361,7 @@ const AppAside = ({ showAside, setShowAside }) => (
   const AppToastMessage = ({ message }) => {
     return <div className={ `App-toast ${ message !== '' ? 'show' : '' }` }> { message } </div>
   }
-
+  
 // End of Modals
 
 // Helpers
