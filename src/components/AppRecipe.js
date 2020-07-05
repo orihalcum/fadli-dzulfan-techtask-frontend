@@ -6,7 +6,7 @@ export const AppRecipe = ({ recipes, viewDetailRecipe }) => {
   return (
     <div data-testid="App-content-recipes" className="App-content-recipes">
       <h3 className="App-content-recipes-title">Recomended Recipes</h3>
-      <div className="App-content-recipes-list">
+      <div data-testid="App-content-recipes-list" className="App-content-recipes-list">
         { recipes.map((item, key) => <RecipeList { ...item } key={ key } viewDetailRecipe={ viewDetailRecipe } />) }
       </div>
     </div>
