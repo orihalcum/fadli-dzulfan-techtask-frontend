@@ -4,8 +4,8 @@ import { destructIngredients } from '../helpers';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export const AppModal = ({ showModal = false, overlay = false, children }) => (
-  <div className={ `App-modal ${ overlay ? 'App-modal-overlay' : 'App-modal-floating' } ${ showModal ? 'show' : '' }` }>
+export const AppModal = ({ showModal = false, overlay = false, children, testId }) => (
+  <div data-testid={ testId } className={ `App-modal ${ overlay ? 'App-modal-overlay' : 'App-modal-floating' } ${ showModal ? 'show' : '' }` }>
     <div className="App-modal-content">
       { children }
     </div>
@@ -14,14 +14,14 @@ export const AppModal = ({ showModal = false, overlay = false, children }) => (
 
 export const AppModalRecomendationRecipe = ({ recomendation, showDetailRecomendationRecipe, setShowDetailRecomendationRecipe, showModalRecomendationRecipe, viewDetailRecipe }) => {
   return (
-    <AppModal showModal={ showModalRecomendationRecipe }>
+    <AppModal data-testid="App-modal-floating" showModal={ showModalRecomendationRecipe } testId="App-modal-recomendation-recipe">
       <div className="recomendation-recipe">
-        <div className="recomendation-recipe-title" onClick={ e => setShowDetailRecomendationRecipe(!showDetailRecomendationRecipe) }>
+        <div data-testid="App-modal-floating-title" className="recomendation-recipe-title" onClick={ e => setShowDetailRecomendationRecipe(!showDetailRecomendationRecipe) }>
           Recomendation Recipes ({ recomendation.length }) <span>{ showDetailRecomendationRecipe ? <UpOutlined /> : <DownOutlined /> }</span>
         </div>
         {
           showDetailRecomendationRecipe &&
-          <div className="recomendation-recipe-list">
+          <div data-testid="App-modal-recomendation-recipe-list" className="recomendation-recipe-list">
             {
               recomendation.map((item, key) => (
                 <div className="recomendation-recipe-item" key={ key} onClick={ () => viewDetailRecipe({ ...item }) }>
@@ -42,7 +42,7 @@ export const AppModalRecomendationRecipe = ({ recomendation, showDetailRecomenda
 
 export const AppModalDetailRecipe = ({ showModalDetailRecipe, closeModal, modalData }) => {
   return (
-    <AppModal showModal={ showModalDetailRecipe } overlay="true">
+    <AppModal showModal={ showModalDetailRecipe } overlay="true" testId="App-modal-detail-recipe">
       <div className="overlay" />
       <div className="App-modal-close" onClick={ closeModal }><LineOutlined /></div>
       <div className="App-modal-body">

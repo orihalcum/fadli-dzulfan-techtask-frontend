@@ -1,24 +1,38 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act, fireEvent } from '@testing-library/react';
 import { AppIngredients, IngredientList } from './AppIngredients';
 import { AppModalRecomendationRecipe } from './AppModal'
-describe('render ingredients correctly', () => {
 
-  const ingredients = [{
-    title: "Ham",
-    "use-by": "2020-11-25",
-    checked: true
-  },
+const ingredients = [{
+  title: "Ham",
+  "use-by": "2020-11-25",
+  checked: false
+},
+{
+  title: "Cheese",
+  "use-by": "2020-11-10",
+  checked: false
+},
+{
+  title: "Sausage",
+  "use-by": "2020-11-01",
+  checked: false
+}]
+
+const recipes = [
   {
-    title: "Cheese",
-    "use-by": "2020-01-08",
-    checked: true
-  },
-  {
-		title: "Sausage",
-    "use-by": "2020-11-25",
-    checked: false
-	}]
+    title: 'Salad',
+    image: 'https://www.onceuponachef.com/images/2019/07/Big-Italian-Salad-1200x1553.jpg',
+    ingredients: [
+      {
+        title: "Ham",
+        "use-by": "2020-11-25",
+      }
+    ]
+  }
+]
+
+describe('render ingredients correctly', () => {
 
   it('app content ingredients exist and show the right title', () => {
     act(() => {
@@ -46,10 +60,45 @@ describe('render ingredients correctly', () => {
     const props = { ingredients, showModalRecomendationRecipe: true, handlePickIngredient: () => ''};
     const { container } = render(<AppIngredients { ...props }/>);
     const AppIngredientsNodes = container.querySelectorAll('.App-ingredient')
-    expect(AppIngredientsNodes.length).toBe(ingredients.length-1) // 1 of the data already used-by
+    expect(AppIngredientsNodes.length).toBe(ingredients.length)
   })
 
-  // it('filtered ingredients', () => {})
+  it('filtered ingredients using use-by', () => {
+    const props = { 
+      ingredients: [{
+        title: "Ham",
+        "use-by": "2020-11-25",
+        checked: false
+      },
+      {
+        title: "Cheese",
+        "use-by": "2020-11-10",
+        checked: false
+      },
+      {
+        title: "Sausage",
+        "use-by": "2020-01-01",
+        checked: false
+      }], 
+      showModalRecomendationRecipe: true, 
+      handlePickIngredient: () => ''
+    };
+    const { container } = render(<AppIngredients { ...props }/>);
+    const AppIngredientsNodes = container.querySelectorAll('.App-ingredient')
+    expect(AppIngredientsNodes.length).toBe(ingredients.length-1)
+  })
+
+  it('showing text no ingredient', () => {
+    const props = { 
+      ingredients: [], 
+      showModalRecomendationRecipe: false, 
+      handlePickIngredient: () => ''
+    };
+    const { container, queryByTestId } = render(<AppIngredients { ...props }/>);
+    const AppIngredientsNodes = container.querySelectorAll('.App-ingredient')
+    expect(AppIngredientsNodes.length).toBe(0)
+    expect(queryByTestId('App-content-ingredients-list').textContent).toBe('No available ingredients');
+  })
 
   it('render first ingredients correctly', () => {
     const props = { ...ingredients[0], handlePickIngredient: () => ''};
@@ -60,16 +109,84 @@ describe('render ingredients correctly', () => {
     // expect(queryByTestId('App-ingredient').childNodes[2]).toBe(true)
   })
 
-  it('render checked ingredient', () => {
-    const props = { ...ingredients[0], handlePickIngredient: () => ''};
-    const { queryByTestId } = render(<IngredientList { ...props }/>);
-    expect(queryByTestId('App-ingredient').firstElementChild.className).toBe('color-primary')
-  })
-
   it('render unchecked ingredient', () => {
     const props = { ...ingredients[2], handlePickIngredient: () => ''};
     const { queryByTestId } = render(<IngredientList { ...props }/>);
     expect(queryByTestId('App-ingredient').firstElementChild.className).toBe('')
   })
 
+
+  it('render checked ingredient', () => {
+    let data = { ...ingredients }
+    data[0]['checked'] = true
+    const props = { ...data[0], handlePickIngredient: () => ''};
+    const { queryByTestId } = render(<IngredientList { ...props }/>);
+    expect(queryByTestId('App-ingredient').firstElementChild.className).toBe('color-primary')
+  })
+
 })
+
+describe('showing modal recomendation correctly', () => {
+
+  const props = {
+    recomendation: recipes,
+    showDetailRecomendationRecipe: () => '',
+    setShowDetailRecomendationRecipe: () => '',
+    showModalRecomendationRecipe: true,
+    viewDetailRecipe: () => ''
+  }
+
+  it('showing modal correctly', () => {
+    const { container } = render(<AppModalRecomendationRecipe { ...props }/>);
+    const AppNodes = container.querySelector('.App-modal-floating')
+    expect(AppNodes.className).toBe('App-modal App-modal-floating show')
+  })
+
+  it('showing title correctly', () => {
+    const { queryByTestId } = render(<AppModalRecomendationRecipe { ...props }/>);
+    expect(queryByTestId('App-modal-floating-title').textContent).toBe(`Recomendation Recipes (${props.recomendation.length}) `)
+  })
+
+  it('render recipe sugestion list correctly', () => {
+    const { container } = render(<AppModalRecomendationRecipe { ...props }/>);
+    const AppNodes = container.querySelectorAll('.recomendation-recipe-item')
+    expect(AppNodes.length).toBe(props.recomendation.length)
+  })
+
+})
+
+describe('modal not showing correctly', () => {
+
+  const props = {
+    recomendation: [],
+    showDetailRecomendationRecipe: () => '',
+    setShowDetailRecomendationRecipe: () => '',
+    showModalRecomendationRecipe: false,
+    viewDetailRecipe: () => ''
+  }
+
+  it('hide modal correctly', () => {
+    const { container } = render(<AppModalRecomendationRecipe { ...props }/>);
+    const AppNodes = container.querySelector('.App-modal-floating')
+    expect(AppNodes.className).toBe('App-modal App-modal-floating ')
+  })
+
+})
+
+// describe('event click checkbox ingredients', () => {
+
+//   let data = Object.assign({}, ingredients)
+
+//   const props = { 
+//     ingredients, 
+//     showModalRecomendationRecipe: data.filter(item => item.checked).length > 0, 
+//     handlePickIngredient: (value, index) => {
+//       data[index]['checked'] = value
+//     }
+//   };
+//   // const { container } = render(<AppIngredients { ...props }/>);
+//   // const AppNodes = container.querySelectorAll('.recomendation-recipe-item')
+//   // const checkbox = AppNodes[0].childNodes[2]
+
+
+// })
