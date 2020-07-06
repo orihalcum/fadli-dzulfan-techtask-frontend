@@ -19,19 +19,26 @@ describe('render header components correctly', () => {
       expect(AppMenuToggleAside).toBeInTheDocument();
     })
   
-    it('show correct initial date', () => {
-      const { queryByTestId } = render(<AppHeader />);
-      const AppMenuDate = queryByTestId('App-menu-date');
-      expect(AppMenuDate.textContent).toBe(moment(new Date()).format('dddd, LL'))
-    })
-
     it('choose the right icon for datepicker', () => {
       const { queryByTestId } = render(<AppHeader />);
       const AppMenuCalendar = queryByTestId('App-menu-calendar');
       expect(AppMenuCalendar).toBeInTheDocument();
     })
 
-  })
+    it('show correct initial date', () => {
+      const { queryByTestId } = render(<AppHeader />);
+      const AppMenuDate = queryByTestId('App-menu-date');
+      expect(AppMenuDate.textContent).toBe(moment(new Date()).format('dddd, LL'))
+    })
+
+    it('show correct date picked', () => {
+      let pickDate = '2020-10-10'
+      const { queryByTestId } = render(<AppHeader pickDate={ pickDate } />);
+      const AppMenuDate = queryByTestId('App-menu-date');
+      expect(AppMenuDate.textContent).toBe(moment(new Date(pickDate)).format('dddd, LL'))
+    })
+
+  }) 
 
   it('app header exist', () => {
     const { queryByTestId } = render(<AppHeader />);
