@@ -109,19 +109,35 @@ describe('render ingredients correctly', () => {
     // expect(queryByTestId('App-ingredient').childNodes[2]).toBe(true)
   })
 
-  it('render unchecked ingredient', () => {
-    const props = { ...ingredients[2], handlePickIngredient: () => ''};
-    const { queryByTestId } = render(<IngredientList { ...props }/>);
-    expect(queryByTestId('App-ingredient').firstElementChild.className).toBe('')
-  })
-
-
   it('render checked ingredient', () => {
     let data = { ...ingredients }
     data[0]['checked'] = true
     const props = { ...data[0], handlePickIngredient: () => ''};
     const { queryByTestId } = render(<IngredientList { ...props }/>);
-    expect(queryByTestId('App-ingredient').firstElementChild.className).toBe('color-primary')
+    const firstIngredient = queryByTestId('App-ingredient')
+    expect(firstIngredient.firstElementChild.className).toBe('color-primary')
+
+    const checkbox = firstIngredient.childNodes[2]
+    expect(checkbox.checked).toBe(true)
+    
+    fireEvent.change(checkbox, { target: { checked: false } })
+    fireEvent.change(checkbox, { target: { value: false } })
+    expect(checkbox.checked).toBe(false)
+    // expect(firstIngredient.firstElementChild.className).toBe('')
+  })
+
+  it('render unchecked ingredient', async () => {
+    const props = { ...ingredients[1], handlePickIngredient: () => ''};
+    const { queryByTestId } = render(<IngredientList { ...props }/>);
+    const thirdIngredient = queryByTestId('App-ingredient')
+    expect(thirdIngredient.firstElementChild.className).toBe('')
+
+    const checkbox = thirdIngredient.childNodes[2]
+    expect(checkbox.checked).toBe(false)
+
+    fireEvent.change(checkbox, { target: { checked: true, value: true } })
+    expect(checkbox.checked).toBe(true)
+    // expect(thirdIngredient.firstElementChild.className).toBe('color-primary')
   })
 
 })
@@ -172,21 +188,3 @@ describe('modal not showing correctly', () => {
   })
 
 })
-
-// describe('event click checkbox ingredients', () => {
-
-//   let data = Object.assign({}, ingredients)
-
-//   const props = { 
-//     ingredients, 
-//     showModalRecomendationRecipe: data.filter(item => item.checked).length > 0, 
-//     handlePickIngredient: (value, index) => {
-//       data[index]['checked'] = value
-//     }
-//   };
-//   // const { container } = render(<AppIngredients { ...props }/>);
-//   // const AppNodes = container.querySelectorAll('.recomendation-recipe-item')
-//   // const checkbox = AppNodes[0].childNodes[2]
-
-
-// })
